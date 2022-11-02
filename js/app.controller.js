@@ -11,6 +11,7 @@ window.onDeleteLoc = onDeleteLoc
 window.onCopyUrl = onCopyUrl
 
 const LOCS_STORAGE_KEY = 'locs'
+window.onSearchInput = onSearchInput
 
 function onInit() {
     const currLoc = renderLocByQueryStringParams()
@@ -31,12 +32,12 @@ function getPosition() {
 }
 
 function onGetLocs() {
-    if(storageService.load(LOCS_STORAGE_KEY)) {
+    if (storageService.load(LOCS_STORAGE_KEY)) {
         console.log('from storage')
         const locs = storageService.load(LOCS_STORAGE_KEY)
         renderLocsList(locs)
     }
-    else{
+    else {
         locService.getLocs()
             .then(locs => {
                 storageService.save(LOCS_STORAGE_KEY, locs)
@@ -96,8 +97,8 @@ function onDeleteLoc(locName) {
 function renderLocByQueryStringParams() {
     const queryStringParams = new URLSearchParams(window.location.search)
     const currLoc = {
-        lat: parseFloat(queryStringParams.get('lat')),
-        lng: parseFloat(queryStringParams.get('lng'))
+        lat: queryStringParams.get('lat'),
+        lng: queryStringParams.get('lng')
     }
 
     if (currLoc.lat === null || currLoc.lng === null) {
@@ -105,10 +106,12 @@ function renderLocByQueryStringParams() {
         currLoc.lng = 34.9120554
         mapService.setQUeryParams()
     }
+    currLoc.lat = parseFloat(currLoc.lat)
+    currLoc.lng = parseFloat(currLoc.lng)
     return currLoc
 }
 
-function onCopyUrl(){
+function onCopyUrl() {
     const url = document.URL
     navigator.clipboard.writeText(url)
     flashMsg()
@@ -121,4 +124,9 @@ function flashMsg() {
     setTimeout(() => {
         el.classList.remove('open')
     }, 3000)
+}
+
+function onSearchInput() {
+    const searchValue = document.querySelector('.search-bar').value
+    mapService.searchInput(searchValue)
 }
