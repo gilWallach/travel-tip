@@ -2,39 +2,34 @@ import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
 window.onload = onInit
-window.onAddMarker = onAddMarker
 window.onPanTo = onPanTo
 window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
+window.onSaveLoc = onSaveLoc
+window.onDeleteLoc = onDeleteLoc
 
 function onInit() {
-    mapService.initMap()
+    const currLoc = renderLocByQueryStringParams()
+    mapService.initMap(currLoc.lat, currLoc.lng)
         .then(() => {
-            console.log('Map is ready')
+            // console.log('Map is ready')
         })
         .catch(() => console.log('Error: cannot init map'))
-
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
-    console.log('Getting Pos')
+    // console.log('Getting Pos')
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     })
-}
-console.log('getPosition', getPosition())
-
-function onAddMarker() {
-    console.log('Adding a marker')
-    mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 })
 }
 
 function onGetLocs() {
     locService.getLocs()
         .then(locs => {
-            console.log('Locations:', locs)
-            document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2) 
+            renderLocsList(locs)
+            // document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2) 
         })
 }
 
@@ -44,14 +39,58 @@ function onGetUserPos() {
             console.log('User position is:', pos.coords)
             document.querySelector('.user-pos').innerText =
                 `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
-                
+
         })
         .catch(err => {
             console.log('err!!!', err)
         })
 }
 
-function onPanTo() {
-    console.log('Panning the Map')
-    mapService.panTo(35.6895, 139.6917)
+function onPanTo(lat, lng) {
+    // console.log('Panning the Map')
+    mapService.panTo(lat, lng)
+}
+
+function onSaveLoc(lat, lng) {
+    const locName = document.querySelector('.input-loc-name').value
+    let date = Date().slice(0, 15)
+    locService.saveLoc(lat, lng, locName, date)
+    mapService.closeSaveModal()
+    onGetLocs()
+}
+
+function renderLocsList(locs) {
+    const strHtml = locs.map((loc) => {
+        return `
+            <li class="loc-item">
+                <h3>${loc.name}</h3>
+                <p>${loc.date}</p>
+                <button onclick="onPanTo(${loc.lat}, ${loc.lng})" class="go-to-btn">&#xe55f;</button>
+                <button onclick="onDeleteLoc('${loc.name}')" class="delete-loc-btn">&#128465;</button>
+            </li>
+        `
+    })
+    document.querySelector('.locs-ul').innerHTML = strHtml.join('')
+}
+
+function onDeleteLoc(locName) {
+    locService.deleteLoc(locName)
+    onGetLocs()
+}
+
+// ----- query params -----
+function renderLocByQueryStringParams() {
+    const queryStringParams = new URLSearchParams(window.location.search)
+    const currLoc = {
+        lat: parseFloat(queryStringParams.get('lat')),
+        lng: parseFloat(queryStringParams.get('lng'))
+    }
+    console.log(currLoc)
+
+    if (currLoc.lat === null || currLoc.lng === null) {
+        currLoc.lat = 32.0749831
+        currLoc.lng = 34.9120554
+        mapService.setQUeryParams()
+    }
+    return currLoc
 }

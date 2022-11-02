@@ -1,0 +1,10 @@
+*{
+    box-sizing: border-box;
+}
+
+.modal-container{
+    width: 200px;
+    height: fit-content;
+}
+
+/* HELPERS */
