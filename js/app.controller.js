@@ -1,5 +1,6 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
+import { storageService } from './services/storage.service.js'
 
 window.onload = onInit
 window.onPanTo = onPanTo
@@ -7,11 +8,15 @@ window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onSaveLoc = onSaveLoc
 window.onDeleteLoc = onDeleteLoc
+window.onCopyUrl = onCopyUrl
+
+const LOCS_STORAGE_KEY = 'locs'
 
 function onInit() {
     const currLoc = renderLocByQueryStringParams()
     mapService.initMap(currLoc.lat, currLoc.lng)
         .then(() => {
+            onGetLocs()
             // console.log('Map is ready')
         })
         .catch(() => console.log('Error: cannot init map'))
@@ -26,17 +31,25 @@ function getPosition() {
 }
 
 function onGetLocs() {
-    locService.getLocs()
-        .then(locs => {
-            renderLocsList(locs)
-            // document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2) 
-        })
+    if(storageService.load(LOCS_STORAGE_KEY)) {
+        console.log('from storage')
+        const locs = storageService.load(LOCS_STORAGE_KEY)
+        renderLocsList(locs)
+    }
+    else{
+        locService.getLocs()
+            .then(locs => {
+                storageService.save(LOCS_STORAGE_KEY, locs)
+                renderLocsList(locs)
+                // document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2) 
+            })
+    }
 }
 
 function onGetUserPos() {
     getPosition()
         .then(pos => {
-            console.log('User position is:', pos.coords)
+            // console.log('User position is:', pos.coords)
             document.querySelector('.user-pos').innerText =
                 `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
 
@@ -60,6 +73,7 @@ function onSaveLoc(lat, lng) {
 }
 
 function renderLocsList(locs) {
+    console.log(locs)
     const strHtml = locs.map((loc) => {
         return `
             <li class="loc-item">
@@ -85,7 +99,6 @@ function renderLocByQueryStringParams() {
         lat: parseFloat(queryStringParams.get('lat')),
         lng: parseFloat(queryStringParams.get('lng'))
     }
-    console.log(currLoc)
 
     if (currLoc.lat === null || currLoc.lng === null) {
         currLoc.lat = 32.0749831
@@ -93,4 +106,19 @@ function renderLocByQueryStringParams() {
         mapService.setQUeryParams()
     }
     return currLoc
+}
+
+function onCopyUrl(){
+    const url = document.URL
+    navigator.clipboard.writeText(url)
+    flashMsg()
+}
+
+function flashMsg() {
+    const el = document.querySelector('.user-msg')
+    el.innerText = 'Url copied to clipboard'
+    el.classList.add('open')
+    setTimeout(() => {
+        el.classList.remove('open')
+    }, 3000)
 }
