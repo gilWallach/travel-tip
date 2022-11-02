@@ -5,10 +5,6 @@ export const mapService = {
     setCenterToUserLoc
 }
 
-let gCurrLoc
-let gUserLoc
-let gSavedLocs
-
 // Var that is used throughout this Module (not global)
 var gMap
 
@@ -45,9 +41,6 @@ function setCenterToUserLoc({ coords }) {
     console.log('lat,lng', lat, lng);
     gMap.setCenter({ lat, lng })
 }
-
-
-
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
