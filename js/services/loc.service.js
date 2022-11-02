@@ -2,6 +2,7 @@ export const locService = {
     getLocs
 }
 
+let gUserLoc
 
 const locs = [
     { name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 

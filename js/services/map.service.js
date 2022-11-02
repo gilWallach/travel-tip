@@ -18,16 +18,23 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
                 center: { lat, lng },
                 zoom: 15
             })
+
+            google.maps.event.addListener(gMap,'click',function(e){
+                console.log(e.latLng);
+                addMarker(e.latLng)
+            })
             console.log('Map!', gMap)
         })
 }
 
 function addMarker(loc) {
+    if(gCurrMarker)gCurrMarker.setMap(null)
     var marker = new google.maps.Marker({
         position: loc,
         map: gMap,
         title: 'Hello World!'
     })
+    gCurrMarker = marker
     return marker
 }
 
