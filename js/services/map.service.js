@@ -1,9 +1,13 @@
 export const mapService = {
     initMap,
     addMarker,
-    panTo
+    panTo,
+    setCenterToUserLoc
 }
 
+let gCurrLoc
+let gUserLoc
+let gSavedLocs
 
 // Var that is used throughout this Module (not global)
 var gMap
@@ -36,6 +40,14 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng)
 }
 
+function setCenterToUserLoc({ coords }) {
+    const { latitude: lat, longitude: lng } = coords
+    console.log('lat,lng', lat, lng);
+    gMap.setCenter({ lat, lng })
+}
+
+
+
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
@@ -50,3 +62,5 @@ function _connectGoogleApi() {
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
 }
+
+

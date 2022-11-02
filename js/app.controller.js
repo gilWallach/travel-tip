@@ -13,6 +13,7 @@ function onInit() {
             console.log('Map is ready')
         })
         .catch(() => console.log('Error: cannot init map'))
+
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
@@ -22,6 +23,7 @@ function getPosition() {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     })
 }
+console.log('getPosition', getPosition())
 
 function onAddMarker() {
     console.log('Adding a marker')
