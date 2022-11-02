@@ -7,6 +7,7 @@ window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onSaveLoc = onSaveLoc
 window.onDeleteLoc = onDeleteLoc
+window.onSearchInput = onSearchInput
 
 function onInit() {
     const currLoc = renderLocByQueryStringParams()
@@ -82,15 +83,21 @@ function onDeleteLoc(locName) {
 function renderLocByQueryStringParams() {
     const queryStringParams = new URLSearchParams(window.location.search)
     const currLoc = {
-        lat: parseFloat(queryStringParams.get('lat')),
-        lng: parseFloat(queryStringParams.get('lng'))
+        lat: queryStringParams.get('lat'),
+        lng: queryStringParams.get('lng')
     }
-    console.log(currLoc)
 
     if (currLoc.lat === null || currLoc.lng === null) {
         currLoc.lat = 32.0749831
         currLoc.lng = 34.9120554
         mapService.setQUeryParams()
     }
+    currLoc.lat = parseFloat(currLoc.lat)
+    currLoc.lng = parseFloat(currLoc.lng)
     return currLoc
+}
+
+function onSearchInput(){
+    const searchValue = document.querySelector('.search-bar').value
+    mapService.searchInput(searchValue)
 }

@@ -2,36 +2,43 @@ export const mapService = {
     initMap,
     addMarker,
     panTo,
-    setCenterToUserLoc,
     closeSaveModal,
     getCurrMarker,
-    setQUeryParams
+    setQUeryParams,
+    searchInput
 }
 
-let gCurrMarker 
-var gMap
+let gCurrMarker
+
+
 // Var that is used throughout this Module (not global)
+var gMap
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    // console.log('InitMap')
+    console.log('InitMap')
     return _connectGoogleApi()
         .then(() => {
-            // console.log('google available')
+            console.log('google available')
             gMap = new google.maps.Map(
                 document.querySelector('#map'), {
                 center: { lat, lng },
                 zoom: 15
             })
 
-            google.maps.event.addListener(gMap, 'click', function (e) {
+            google.maps.event.addListener(gMap,'click',function(e){
+                console.log(e.latLng.toJSON());
                 addMarker(e.latLng)
             })
-            // console.log('Map!', gMap)
+            console.log('Map!', gMap)
         })
 }
 
+function getCurrMarker(){
+  return gCurrMarker
+}
+
 function addMarker(loc) {
-    if (gCurrMarker) gCurrMarker.setMap(null)
+    if(gCurrMarker)gCurrMarker.setMap(null)
     var marker = new google.maps.Marker({
         position: loc,
         map: gMap,
@@ -44,11 +51,15 @@ function addMarker(loc) {
     marker.infoWindow.open(gMap, marker)
 
     gCurrMarker = marker
-    const { lat, lng } = loc
-    if (typeof lat === 'function') panTo(loc.toJSON().lat, loc.toJSON().lng)
-    else panTo(lat, lng)
-    setQUeryParams()
+    console.log(typeof loc.lat);
+    const {lat, lng} = loc
+    if(typeof lat === 'function')panTo(loc.toJSON().lat,loc.toJSON().lng)
+    else panTo(lat,lng)
     return marker
+}
+
+function closeSaveModal(){
+  gCurrMarkerinfoWindow.close()
 }
 
 function renderInfoModal(loc) {
@@ -67,17 +78,20 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng)
 }
 
-function setCenterToUserLoc({ coords }) {
-    const { latitude: lat, longitude: lng } = coords
-    gMap.setCenter({ lat, lng })
-}
+function searchInput(value,onSuccess = initMap){
+  const prm1 = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${value}&key=AIzaSyDnRn3KRkL2qHovAbZ-jQx7yM1NawhwKJw`)
+  prm1.then(res => {
+      console.log('res', res)
+      const prm2 = res.json()
+      prm2.then(ans => {
+          console.log('ans', ans.results[0].geometry.location)
+          const location = ans.results[0].geometry.location
+          onSuccess(location.lat,location.lng)
+          gCurrMarker = location
+          setQUeryParams()
 
-function closeSaveModal() {
-    gCurrMarker.infoWindow.close();
-}
-
-function getCurrMarker() {
-    return gCurrMarker
+      })
+  })
 }
 
 // ----- LOCAL_FUNCTIONS -----
@@ -97,7 +111,9 @@ function _connectGoogleApi() {
 
 function setQUeryParams() {
     let currMarker = mapService.getCurrMarker()
-    if (currMarker) currMarker = currMarker.position.toJSON()
+    if (currMarker) {
+      if(typeof currMarker === 'function')currMarker = currMarker.position.toJSON()
+    }
     else {
         currMarker = {
             lat: 32.0749831,
