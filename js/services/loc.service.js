@@ -1,7 +1,13 @@
 export const locService = {
-    getLocs
+    getLocs,
+    getUserCurrPos
 }
+let gUserCurrPos
 
+function getUserCurrPos(pos){
+    gUserCurrPos = pos
+    return gUserCurrPos
+}
 
 const locs = [
     { name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 

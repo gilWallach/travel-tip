@@ -32,7 +32,7 @@ function onGetLocs() {
     locService.getLocs()
         .then(locs => {
             console.log('Locations:', locs)
-            document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
+            document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2) 
         })
 }
 
@@ -42,6 +42,11 @@ function onGetUserPos() {
             console.log('User position is:', pos.coords)
             document.querySelector('.user-pos').innerText =
                 `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            console.log(pos);
+            locService.getUserCurrPos(pos.coords)
+            const {latitude:lat,longitude:lng} = pos.coords
+            mapService.addMarker({lat,lng})
+            console.log(lat,lng);
         })
         .catch(err => {
             console.log('err!!!', err)
