@@ -15,8 +15,8 @@ function getUserCurrPos(pos){
     return gUserCurrPos
 }
 const locs = [
-    { name: 'Greatplace', date: '', lat: 32.047104, lng: 34.832384 }, 
-    { name: 'Neveragain',date: '', lat: 32.047201, lng: 34.832581 },
+    { name: 'Greatplace', date: 'Wed Nov 12 2022', lat: 32.047104, lng: 34.832384 }, 
+    { name: 'Neveragain',date: 'Wed Nov 22 2022', lat: 32.047201, lng: 34.832581 },
 ]
 
 function getLocs() {

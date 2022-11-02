@@ -59,7 +59,7 @@ function addMarker(loc) {
 }
 
 function closeSaveModal(){
-  gCurrMarkerinfoWindow.close()
+  gCurrMarker.infoWindow.close()
 }
 
 function renderInfoModal(loc) {
@@ -89,7 +89,7 @@ function searchInput(value,onSuccess = initMap){
           onSuccess(location.lat,location.lng)
           gCurrMarker = location
           setQUeryParams()
-
+        gCurrMarker = false
       })
   })
 }

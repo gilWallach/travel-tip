@@ -51,8 +51,9 @@ function onGetUserPos() {
     getPosition()
         .then(pos => {
             // console.log('User position is:', pos.coords)
+            onPanTo(pos.coords.latitude, pos.coords.latitude)
             document.querySelector('.user-pos').innerText =
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.latitude}`
 
         })
         .catch(err => {
@@ -77,10 +78,12 @@ function renderLocsList(locs) {
     console.log(locs)
     const strHtml = locs.map((loc) => {
         return `
-            <li class="loc-item">
+            <li class="loc-item flex space-between">
+            <div class="list-head flex">
                 <h3>${loc.name}</h3>
                 <p>${loc.date}</p>
-                <button onclick="onPanTo(${loc.lat}, ${loc.lng})" class="go-to-btn">&#xe55f;</button>
+                </div>
+                <button onclick="onPanTo(${loc.lat}, ${loc.lng})" class="go-to-btn">&#x261B;</button>
                 <button onclick="onDeleteLoc('${loc.name}')" class="delete-loc-btn">&#128465;</button>
             </li>
         `

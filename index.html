@@ -9,22 +9,27 @@
 </head>
 
 <body>
-    <h1>TravelTip Starter</h1>
-    <div class="search">
-        <input class="search-bar" type="search" placeholder="search place...">
-        <button type="button" onclick="onSearchInput()">Search</button>
-    </div>
-    <div id="map" style="width: 100%; height: 400px;"></div>
-    <!-- <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Speific Location</button> -->
-    <button onclick="onGetUserPos()" class="btn-user-pos">Get User Position</button>
-    <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
-    <button onclick="onPanTo()" class="btn-pan">Pan Map to Tokyo</button>
-    <button onclick="onCopyUrl()" class="btn-copyUrl">Copy url</button>
+    <header class="main-header flex space-between align-center">
+        <h1>TravelTip Starter</h1>
+        <div class="search">
+            <input class="search-bar" type="search" placeholder="search place...">
+            <button type="button" onclick="onSearchInput()">Search</button>
+        </div>
+    </header>
+    <div class="main-container">
 
-    <p>You are at: <span class="user-pos"></span></p>
-    <p>Locations:</p>
-    <ul class="locs-ul"></ul>
-<div class="user-msg"></div>
+        <div id="map" style="width: 100%; height: 400px;"></div>
+        <div class="main-buttons">
+            <button onclick="onGetUserPos()" class="btn-user-pos">Get User Position</button>
+            <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
+            <button onclick="onCopyUrl()" class="btn-copyUrl">Copy url</button>
+        </div>
+    <div class="list-container">
+        <h2>Locations:</h2>
+        <ul class="locs-ul"></ul>
+    </div>
+    <div class="user-msg"></div>
+    </div>
 
 
     <script type="module" src="js/app.controller.js"></script>

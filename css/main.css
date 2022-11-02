@@ -2,6 +2,75 @@
     box-sizing: border-box;
 }
 
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #dff5ff;
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #4cadda;
+    margin: 0;
+    padding: 20px;
+    z-index: 10;
+}
+input{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: 1px solid #e0e0e0;
+}
+
+.main-buttons{
+    width: fit-content;
+    margin: auto;
+}
+button{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px 20px;
+    margin: 20px 10px;
+    background-color: #419646;
+    color: #dff5ff;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-loc-btn{
+    background-color: #c44d4d;
+}
+
+ul{
+    padding: 0;
+}
+
+.list-container{
+    padding: 10px;
+    width: fit-content;
+    background-color: #f4fcff ;
+    border-radius: 25px;
+    margin: auto;
+}
+
+.list-head{
+    flex-direction: column;
+}
+li{
+    width: 400px;
+    border-bottom: 1px solid #e0e0e0;
+}
+li button{
+    font-size: 24px;
+}
+.main-container{
+    margin-top: 166px;
+
+}
+
+
 .modal-container{
     width: 200px;
     height: fit-content;
@@ -20,3 +89,14 @@
     transition: bottom .5s;
 }
 /* HELPERS */
+.flex{
+    display: flex;
+}
+
+.space-between{
+    justify-content: space-between;
+}
+
+.align-center{
+    align-items: center;
+}
