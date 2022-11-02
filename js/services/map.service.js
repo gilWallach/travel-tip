@@ -2,7 +2,7 @@ export const mapService = {
     initMap,
     addMarker,
     panTo,
-    setCenterToUserLoc
+    setCenterToUserLoc,
 }
 
 // Var that is used throughout this Module (not global)
@@ -20,7 +20,7 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
             })
 
             google.maps.event.addListener(gMap,'click',function(e){
-                console.log(e.latLng);
+                console.log(e.latLng.toJSON());
                 addMarker(e.latLng)
             })
             console.log('Map!', gMap)
@@ -35,6 +35,11 @@ function addMarker(loc) {
         title: 'Hello World!'
     })
     gCurrMarker = marker
+    console.log(typeof loc.lat);
+    const {lat, lng} = loc
+    if(typeof lat === 'function')panTo(loc.toJSON().lat,loc.toJSON().lng)
+    else panTo(lat,lng)
+    addInfoWindow(loc)
     return marker
 }
 
@@ -47,6 +52,15 @@ function setCenterToUserLoc({ coords }) {
     const { latitude: lat, longitude: lng } = coords
     console.log('lat,lng', lat, lng);
     gMap.setCenter({ lat, lng })
+}
+function addInfoWindow(loc){
+    const infoWindow = new google.maps.InfoWindow({
+        position: loc,
+      });
+      infoWindow.setContent(
+        JSON.stringify(loc.toJSON(), null, 2)
+      );
+    infoWindow.open(gMap);
 }
 
 function _connectGoogleApi() {
